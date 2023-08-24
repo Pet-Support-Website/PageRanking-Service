@@ -28,12 +28,12 @@ class Indexer:
                 self.solr.add(j)
 
 
-if __name__ == '__main__':
-    s = Indexer()
-    s.run_indexer()
-    results="1"
-    results = s.solr.search('text:cat vomiting', **{'defType': 'edismax', 'boost': 'mul(query($q),field(pagerank,min))'})
-    for result in results:
-        print("The title is '{0} ({1})'.".format(result['title'], result['url']))
-    if results== "1":
-        print("no search result found")
+# if __name__ == '__main__':
+#     s = Indexer()
+#     s.run_indexer()
+#     results="1"
+#     results = s.solr.search('text:cat vomiting', **{'defType': 'edismax', 'boost': 'mul(query($q),field(pagerank,min))'})
+#     for result in results:
+#         print("The title is '{0} ({1})'.".format(result['title'], result['url']))
+#     if results== "1":
+#         print("no search result found")

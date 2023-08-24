@@ -56,5 +56,5 @@ class Pr:
     pass
 
 
-s = Pr(alpha=0.85)
-s.pr_calc()
+# s = Pr(alpha=0.85)
+# s.pr_calc()
