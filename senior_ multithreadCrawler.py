@@ -1,3 +1,5 @@
+import time
+
 import requests
 import multiprocessing
 import pickle
@@ -10,6 +12,11 @@ from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urljoin, urlparse
 from pathlib import Path
 
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+
 
 class MultiThreadCrawler:
     def __init__(self, base_url, depth):
@@ -17,10 +24,11 @@ class MultiThreadCrawler:
         extracted_url = urlparse(base_url)
         parent = extracted_url.path[:extracted_url.path.rfind("/") + 1]
         self.root_url = '{}://{}{}'.format(extracted_url.scheme, extracted_url.netloc, parent)
-        self.pool = ThreadPoolExecutor(max_workers=multiprocessing.cpu_count() - 1)
+        self.pool = ThreadPoolExecutor(3)
         self.to_crawl = Queue()
         self.to_crawl.put({self.base_url: depth})
-        self.stored_folder = Path(os.path.abspath('')).parent / '/crawled1/'
+        self.stored_folder = Path(os.path.abspath('')).parent / '/crawledhometestD5T3/'
+        self.service = Service(ChromeDriverManager().install())
 
         if not Path(self.stored_folder).exists():
             Path.mkdir(self.stored_folder)
@@ -37,8 +45,10 @@ class MultiThreadCrawler:
             try:
                 target = self.to_crawl.get(timeout=10)
                 url, depth = [(k, target[k]) for k in target][0]
+                # print(url + self.crawled_pages.pop())
                 if url not in self.crawled_pages:
                     self.crawled_pages.add(url)
+                    # self.extract_page(self.get_page, url, depth - 1)
                     job = self.pool.submit(self.get_page, url, depth - 1)
                     job.add_done_callback(self.extract_page)
             except Empty:
@@ -54,14 +64,19 @@ class MultiThreadCrawler:
     def extract_page(self, obj):
         if obj.result():
             result, url, depth = obj.result()
-            if result and result.status_code == 200:
-                url_lists = self.parse_links(result.text, depth)
-                self.parse_contents(url, result.text, url_lists)
+            if result:
+                url_lists = self.parse_links(result, depth)
+                self.parse_contents(url, result, url_lists)
 
     def get_page(self, url, depth):
         try:
-            res = requests.get(url, timeout=(3, 30))
-            return res, url, depth
+            with webdriver.Chrome(service=self.service) as driver:
+                driver.get(url)
+                driver.implicitly_wait(5)
+                time.sleep(3)
+                res = driver.page_source
+                # print(res)
+                return res, url, depth
         except requests.RequestException:
             return
 
@@ -101,5 +116,5 @@ class MultiThreadCrawler:
 
 
 if __name__ == '__main__':
-    s = MultiThreadCrawler("https://camt.cmu.ac.th/index.php/th/", 1)
+    s = MultiThreadCrawler("http://localhost:3000/", 5)
     s.run_scraper()
