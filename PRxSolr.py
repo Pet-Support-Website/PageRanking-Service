@@ -3,7 +3,7 @@ import os
 import pickle
 from pathlib import Path
 import pysolr
-from senior_pageRank import Pr
+from PageRankingAlgorithm import Pr
 
 
 class Indexer:

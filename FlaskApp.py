@@ -1,5 +1,5 @@
 from flask import Flask, request
-from senior_prxsolr import Indexer
+from PRxSolr import Indexer
 import pandas as pd
 import numpy as np
 import time
