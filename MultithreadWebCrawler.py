@@ -61,9 +61,9 @@ class MultiThreadCrawler:
                 print(e)
                 continue
 
-    def extract_page(self, obj):
-        if obj.result():
-            result, url, depth = obj.result()
+    def extract_page(self, str):
+        if str.result():
+            result, url, depth = str.result()
             if result:
                 url_lists = self.parse_links(result, depth)
                 self.parse_contents(url, result, url_lists)
