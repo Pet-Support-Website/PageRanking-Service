@@ -49,7 +49,7 @@ class Pr:
             prev_Px = Px
             Px = Px * P
 
-        print('Converged in {0} iterations: {1}'.format(i, np.around(np.asarray(Px).flatten().astype(float), 5)))
+        print('Converged in {0} iterations:\n {1}'.format(i, np.around(np.asarray(Px).flatten().astype(float), 5)))
 
         self.pr_result = pd.DataFrame(Px, columns=url_matrix.index, index=['score']).T.loc[list(url_maps.keys())]
 
