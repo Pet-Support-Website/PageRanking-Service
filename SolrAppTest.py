@@ -27,6 +27,6 @@ class Indexer:
 if __name__ == '__main__':
     s = Indexer()
     s.run_indexer()
-    results = s.solr.search('text:general cat care')
+    results = s.solr.search('text: dog')
     for result in results:
         print("The title is '{0} ({1})'.".format(result['title'], result['url']))

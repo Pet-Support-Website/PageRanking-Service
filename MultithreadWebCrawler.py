@@ -24,10 +24,10 @@ class MultiThreadCrawler:
         extracted_url = urlparse(base_url)
         parent = extracted_url.path[:extracted_url.path.rfind("/") + 1]
         self.root_url = '{}://{}{}'.format(extracted_url.scheme, extracted_url.netloc, parent)
-        self.pool = ThreadPoolExecutor(3)
+        self.pool = ThreadPoolExecutor(1)
         self.to_crawl = Queue()
         self.to_crawl.put({self.base_url: depth})
-        self.stored_folder = Path(os.path.abspath('')).parent / '/crawledhometestD5T3/'
+        self.stored_folder = Path(os.path.abspath('')).parent / './PageRanking-Service/crawledtestD2/'
         self.service = Service(ChromeDriverManager().install())
 
         if not Path(self.stored_folder).exists():
@@ -116,5 +116,5 @@ class MultiThreadCrawler:
 
 
 if __name__ == '__main__':
-    s = MultiThreadCrawler("http://localhost:3000/", 5)
+    s = MultiThreadCrawler("http://localhost:3000/", 2)
     s.run_scraper()

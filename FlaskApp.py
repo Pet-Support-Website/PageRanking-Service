@@ -17,7 +17,8 @@ def search_solr():
     start = time.time()
     response_object = {'status': 'success'}
     argList = request.args.to_dict(flat=False)
-    query_term=argList['query'][0]
+    query_term=argList['query'][0].replace("202","+")
+    print(query_term)
     results = appsolr.solr.search('text:'+query_term, **{'defType': 'edismax', 'boost': 'mul(query($q),field(pagerank,min))'})
     end = time.time()
     filtered_results = []
